@@ -1,5 +1,5 @@
 
-name: Publish MediCart Image
+name: Publish and Deploy MediCart
 
 on:
   push:
@@ -11,14 +11,15 @@ permissions:
   packages: write
 
 jobs:
-  publish:
-    name: Build and Push Docker Image
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Get the source code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Authenticate with GHCR
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -26,9 +27,43 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Build and publish Docker image
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: ghcr.io/syedamushfia/medicart-webapp:latest
+
+      # Deploy image to EC2
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.2
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: SUPABASE_URL,SUPABASE_SECRET_KEY
+          script: |
+            set -e
+
+            sudo mkdir -p /opt/medicart
+
+            printf 'SUPABASE_URL=%s\nSUPABASE_SECRET_KEY=%s\n' "$SUPABASE_URL" "$SUPABASE_SECRET_KEY" | sudo tee /opt/medicart/.env > /dev/null
+
+            sudo chmod 600 /opt/medicart/.env
+
+            sudo docker pull ghcr.io/syedamushfia/medicart-webapp:latest
+
+            sudo docker rm -f medicart || true
+
+            sudo docker run -d \
+              --name medicart \
+              --restart unless-stopped \
+              -p 80:3001 \
+              --env-file /opt/medicart/.env \
+              ghcr.io/syedamushfia/medicart-webapp:latest
+
+            sudo docker ps
