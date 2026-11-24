@@ -25,3 +25,8 @@ variable "ssh_cidr" {
   description = "Your public IP address in CIDR notation"
   type        = string
 }
+
+variable "deployment_public_key" {
+  description = "SSH public key used by GitHub Actions to connect to EC2"
+  type        = string
+}
