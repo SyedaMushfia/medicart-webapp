@@ -5,7 +5,7 @@ import { useCart } from '../../context/CartContext.tsx';
 
 const navLinks = [
   { label: 'Home', href: '/' },
-  { label: 'Shop / Medicines', href: '/shop' },
+  { label: 'Shop', href: '/shop' },
   { label: 'Categories', href: '/categories' },
   { label: 'Track Order', href: '/track' },
   { label: 'About Us', href: '/about' },
