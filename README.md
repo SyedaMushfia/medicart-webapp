@@ -1,10 +1,10 @@
-# MediCart – CI/CD Pipeline and Cloud Deployment Documentation
+# CI/CD Pipeline and Cloud Deployment Documentation
 
 ## 1. Project Overview
 
-MediCart is a web application developed using React and Node.js, with Supabase used as its backend database and service provider.
+The project is a web application developed using React and Node.js, with Supabase used as its backend database and service provider.
 
-The project was extended with DevOps practices to automate application testing, building, containerisation, image publishing, and cloud deployment.
+It was extended with DevOps practices to automate application testing, building, containerisation, image publishing, and cloud deployment.
 
 The main objective was to establish an automated CI/CD pipeline using GitHub Actions, Docker, GitHub Container Registry (GHCR), Terraform, and Amazon EC2.
 
@@ -498,7 +498,7 @@ The following checks were performed during implementation.
 
 ## 12. Conclusion
 
-The MediCart project demonstrates the implementation of an automated CI/CD pipeline and cloud deployment workflow using commonly used DevOps tools.
+The project demonstrates the implementation of an automated CI/CD pipeline and cloud deployment workflow using commonly used DevOps tools.
 
 GitHub Actions automates code verification, Docker image creation, image publishing and deployment. Docker provides a consistent containerised application environment, while GHCR stores the application image for distribution.
 
